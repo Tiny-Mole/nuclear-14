@@ -1,6 +1,7 @@
 name: YAML Linter
 
 on:
+  workflow_dispatch:
   push:
     branches: [ master, staging, trying ]
   merge_group:
@@ -11,7 +12,7 @@ jobs:
   build:
     name: YAML Linter
     if: github.actor != 'PJBot' && github.event.pull_request.draft == false && github.actor != 'DeltaV-Bot' && github.actor != 'SimpleStation14'
-    runs-on: ubuntu-latest
+    runs-on: VK-Cloud
     steps:
       - uses: actions/checkout@v3.6.0
       - name: Setup submodule
@@ -23,10 +24,14 @@ jobs:
         run: |
           cd RobustToolbox/
           git submodule update --init --recursive
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v3.2.0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 9.0.x
+         dotnet-version: '9.0.x'
+         cache: true
+         cache-dependency-path: |
+           **/*.csproj
+           **/packages.lock.json
       - name: Install dependencies
         run: dotnet restore
       - name: Build

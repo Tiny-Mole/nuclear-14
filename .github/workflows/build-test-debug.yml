@@ -13,7 +13,7 @@ jobs:
     if: github.actor != 'PJBot' && github.event.pull_request.draft == false && github.actor != 'DeltaV-Bot' && github.actor != 'SimpleStation14'
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [VK-Cloud]
 
     runs-on: ${{ matrix.os }}
 
@@ -33,10 +33,14 @@ jobs:
         cd RobustToolbox/
         git submodule update --init --recursive
 
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3.2.0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 9.0.x
+         dotnet-version: '9.0.x'
+         cache: true
+         cache-dependency-path: |
+           **/*.csproj
+           **/packages.lock.json
 
     - name: Install dependencies
       run: dotnet restore
